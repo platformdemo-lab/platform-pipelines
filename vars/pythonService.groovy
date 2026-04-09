@@ -4,38 +4,54 @@ def call(Map config = [:]) {
     def port = config.port ?: "5000"
     def envVars = config.envVars ?: [:]
 
+    def runTests = config.runTests ?: false
+    def runCodeScan = config.runCodeScan ?: false
+    def runContainerScan = config.runContainerScan ?: false
+
     pipeline {
         agent any
 
         stages {
 
-            stage('Cleanup') {
-                steps {
-                    sh 'docker system prune -af || true'
-                }
-            }
-
-            stage('Docker Build') {
-                steps {
-                    sh """
-                    DOCKER_BUILDKIT=0 docker build -t ${appName} .
-                    """
-                }
-            }
-
-            stage('Run Container') {
+            stage('unitTest') {
+                when { expression { runTests } }
                 steps {
                     script {
+                        org.platform.unitTest.run()
+                    }
+                }
+            }
 
-                        // Convert env map to docker flags
-                        def envString = envVars.collect { k, v -> "-e ${k}=${v}" }.join(" ")
+            stage('codeScan') {
+                when { expression { runCodeScan } }
+                steps {
+                    script {
+                        org.platform.codeScan.run()
+                    }
+                }
+            }
 
-                        sh """
-                        docker rm -f ${appName} || true
-                        docker run -d -p ${port}:${port} \
-                          ${envString} \
-                          --name ${appName} ${appName}
-                        """
+            stage('build') {
+                steps {
+                    script {
+                        org.platform.buildImage.run(appName)
+                    }
+                }
+            }
+
+            stage('containerScan') {
+                when { expression { runContainerScan } }
+                steps {
+                    script {
+                        org.platform.containerScan.run(appName)
+                    }
+                }
+            }
+
+            stage('deploy') {
+                steps {
+                    script {
+                        org.platform.deployService.run(appName, port, envVars)
                     }
                 }
             }
