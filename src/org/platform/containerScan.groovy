@@ -1,18 +1,7 @@
 package org.platform
 
-def run(appName) {
-
-    sh '''
-    if ! command -v trivy &> /dev/null
-    then
-      sudo apt-get update
-      sudo apt-get install wget apt-transport-https gnupg lsb-release -y
-      wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-      echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
-      sudo apt-get update
-      sudo apt-get install trivy -y
-    fi
-    '''
-
-    sh "trivy image ${appName} || true"
+class containerScan {
+    static def run(appName) {
+        sh "trivy image ${appName} || true"
+    }
 }

@@ -1,6 +1,8 @@
 package org.platform
 
-def run() {
-    sh 'pip3 install -r requirements.txt'
-    sh 'pytest || true'
+class unitTest {
+    static def run() {
+        sh 'pip3 install -r requirements.txt'
+        sh 'pytest || true'
+    }
 }
