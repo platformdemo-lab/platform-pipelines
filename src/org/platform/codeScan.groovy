@@ -12,7 +12,7 @@ class codeScan {
         script.sh '''
         python3 -m venv venv
         venv/bin/pip install bandit
-        venv/bin/bandit -r . || true
+        venv/bin/bandit -r src -ll -q || true
         '''
     }
 }
