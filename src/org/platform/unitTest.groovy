@@ -9,7 +9,10 @@ class unitTest {
     }
 
     def run() {
-        script.sh 'pip3 install -r requirements.txt'
-        script.sh 'pytest || true'
+        script.sh '''
+        python3 -m venv venv
+        venv/bin/pip install -r requirements.txt
+        venv/bin/pytest || true
+        '''
     }
 }

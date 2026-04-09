@@ -9,7 +9,10 @@ class codeScan {
     }
 
     def run() {
-        script.sh 'pip3 install bandit'
-        script.sh 'bandit -r . || true'
+        script.sh '''
+        python3 -m venv venv
+        venv/bin/pip install bandit
+        venv/bin/bandit -r . || true
+        '''
     }
 }
