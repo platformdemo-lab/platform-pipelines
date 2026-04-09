@@ -9,9 +9,17 @@ def call(Map config = [:]) {
 
         stages {
 
+            stage('Cleanup') {
+                steps {
+                    sh 'docker system prune -af || true'
+                }
+            }
+
             stage('Docker Build') {
                 steps {
-                    sh "docker build -t ${appName} ."
+                    sh """
+                    DOCKER_BUILDKIT=0 docker build -t ${appName} .
+                    """
                 }
             }
 
@@ -19,6 +27,7 @@ def call(Map config = [:]) {
                 steps {
                     script {
 
+                        // Convert env map to docker flags
                         def envString = envVars.collect { k, v -> "-e ${k}=${v}" }.join(" ")
 
                         sh """
