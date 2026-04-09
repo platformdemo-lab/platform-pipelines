@@ -1,3 +1,9 @@
+import org.platform.unitTest
+import org.platform.codeScan
+import org.platform.buildImage
+import org.platform.containerScan
+import org.platform.deployService
+
 def call(Map config = [:]) {
 
     def appName = config.appName ?: "app"
@@ -17,7 +23,7 @@ def call(Map config = [:]) {
                 when { expression { runTests } }
                 steps {
                     script {
-                        org.platform.unitTest.run()
+                        unitTest.run()
                     }
                 }
             }
@@ -26,7 +32,7 @@ def call(Map config = [:]) {
                 when { expression { runCodeScan } }
                 steps {
                     script {
-                        org.platform.codeScan.run()
+                        codeScan.run()
                     }
                 }
             }
@@ -34,7 +40,7 @@ def call(Map config = [:]) {
             stage('build') {
                 steps {
                     script {
-                        org.platform.buildImage.run(appName)
+                        buildImage.run(appName)
                     }
                 }
             }
@@ -43,7 +49,7 @@ def call(Map config = [:]) {
                 when { expression { runContainerScan } }
                 steps {
                     script {
-                        org.platform.containerScan.run(appName)
+                        containerScan.run(appName)
                     }
                 }
             }
@@ -51,7 +57,7 @@ def call(Map config = [:]) {
             stage('deploy') {
                 steps {
                     script {
-                        org.platform.deployService.run(appName, port, envVars)
+                        deployService.run(appName, port, envVars)
                     }
                 }
             }
