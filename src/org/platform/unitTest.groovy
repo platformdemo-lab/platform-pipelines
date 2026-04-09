@@ -1,8 +1,15 @@
 package org.platform
 
 class unitTest {
-    static def run() {
-        sh 'pip3 install -r requirements.txt'
-        sh 'pytest || true'
+
+    def script
+
+    unitTest(script) {
+        this.script = script
+    }
+
+    def run() {
+        script.sh 'pip3 install -r requirements.txt'
+        script.sh 'pytest || true'
     }
 }

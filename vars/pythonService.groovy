@@ -23,7 +23,7 @@ def call(Map config = [:]) {
                 when { expression { runTests } }
                 steps {
                     script {
-                        unitTest.run()
+                        new unitTest(this).run()
                     }
                 }
             }
@@ -32,7 +32,7 @@ def call(Map config = [:]) {
                 when { expression { runCodeScan } }
                 steps {
                     script {
-                        codeScan.run()
+                        new codeScan(this).run()
                     }
                 }
             }
@@ -40,7 +40,7 @@ def call(Map config = [:]) {
             stage('build') {
                 steps {
                     script {
-                        buildImage.run(appName)
+                        new buildImage(this).run(appName)
                     }
                 }
             }
@@ -49,7 +49,7 @@ def call(Map config = [:]) {
                 when { expression { runContainerScan } }
                 steps {
                     script {
-                        containerScan.run(appName)
+                        new containerScan(this).run(appName)
                     }
                 }
             }
@@ -57,7 +57,7 @@ def call(Map config = [:]) {
             stage('deploy') {
                 steps {
                     script {
-                        deployService.run(appName, port, envVars)
+                        new deployService(this).run(appName, port, envVars)
                     }
                 }
             }

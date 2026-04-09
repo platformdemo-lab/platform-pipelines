@@ -1,11 +1,18 @@
 package org.platform
 
 class deployService {
-    static def run(appName, port, envVars) {
+
+    def script
+
+    deployService(script) {
+        this.script = script
+    }
+
+    def run(appName, port, envVars) {
 
         def envString = envVars.collect { k, v -> "-e ${k}=${v}" }.join(" ")
 
-        sh """
+        script.sh """
         docker rm -f ${appName} || true
         docker run -d -p ${port}:${port} \
           ${envString} \

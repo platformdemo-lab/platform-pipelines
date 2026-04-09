@@ -1,8 +1,15 @@
 package org.platform
 
 class buildImage {
-    static def run(appName) {
-        sh 'docker system prune -af || true'
-        sh "DOCKER_BUILDKIT=0 docker build -t ${appName} ."
+
+    def script
+
+    buildImage(script) {
+        this.script = script
+    }
+
+    def run(appName) {
+        script.sh 'docker system prune -af || true'
+        script.sh "DOCKER_BUILDKIT=0 docker build -t ${appName} ."
     }
 }

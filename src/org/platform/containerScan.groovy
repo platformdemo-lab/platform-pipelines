@@ -1,7 +1,14 @@
 package org.platform
 
 class containerScan {
-    static def run(appName) {
-        sh "trivy image ${appName} || true"
+
+    def script
+
+    containerScan(script) {
+        this.script = script
+    }
+
+    def run(appName) {
+        script.sh "trivy image ${appName} || true"
     }
 }

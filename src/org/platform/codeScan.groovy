@@ -1,8 +1,15 @@
 package org.platform
 
 class codeScan {
-    static def run() {
-        sh 'pip3 install bandit'
-        sh 'bandit -r . || true'
+
+    def script
+
+    codeScan(script) {
+        this.script = script
+    }
+
+    def run() {
+        script.sh 'pip3 install bandit'
+        script.sh 'bandit -r . || true'
     }
 }
