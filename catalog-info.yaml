@@ -1,0 +1,11 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: platform-pipelines
+  description: Shared Jenkins pipeline library used by platform-managed Python services
+  annotations:
+    github.com/project-slug: platformdemo-lab/platform-pipelines
+spec:
+  type: library
+  owner: user:default/guest
+  lifecycle: experimental
